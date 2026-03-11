@@ -1,3 +1,10 @@
+:root {
+    --primary-color: #1a1a1a;
+    --bg-color: #ffffff;
+    --accent-soft: #f4f4f4;
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,80 +12,96 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #ffffff;
-    color: #1a1a1a;
-    line-height: 1.6;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px; /* Leggermente più largo per desktop */
     margin: 0 auto;
-    padding: 60px 20px;
+    padding: 2rem;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    text-align: center;
 }
 
+/* Titolo con effetto gradiente o peso variabile */
 .title {
-    font-size: 4rem;
-    font-weight: 700;
-    margin-bottom: 60px;
-    letter-spacing: -0.02em;
+    font-size: clamp(2.5rem, 8vw, 5rem); /* Si ridimensiona fluidamente */
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+    letter-spacing: -0.04em;
+    text-align: left; /* Allineamento a sinistra è più moderno per i portfolio */
 }
 
 .projects {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     width: 100%;
 }
 
+/* Link trasformati in "Card" moderne */
 .project-link {
-    display: inline-block;
-    padding: 14px 28px;
-    border: 1px solid #1a1a1a;
-    color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content:沟通;
+    padding: 1.5rem 2rem;
+    border: 1px solid #e0e0e0;
+    color: var(--primary-color);
     text-decoration: none;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
-    border-radius: 4px;
+    border-radius: 12px; /* Angoli più smussati */
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
 }
 
 .project-link:hover {
-    background-color: #1a1a1a;
-    color: #ffffff;
+    border-color: var(--primary-color);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
 }
 
-/* Responsivo per mobile */
-@media (max-width: 600px) {
-    .container {
-        padding: 40px 20px;
+/* Effetto freccia che appare al passaggio */
+.project-link::after {
+    content: '→';
+    position: absolute;
+    right: 2rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: var(--transition);
+}
+
+.project-link:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Ottimizzazione Desktop */
+@media (min-width: 768px) {
+    .projects {
+        grid-template-columns: repeat(2, 1fr); /* Due colonne su desktop */
     }
     
     .title {
-        font-size: 3rem;
-        margin-bottom: 40px;
-    }
-    
-    .project-link {
-        padding: 12px 20px;
-        font-size: 0.95rem;
+        margin-bottom: 4rem;
     }
 }
 
-@media (max-width: 400px) {
-    .title {
-        font-size: 2.5rem;
-        margin-bottom: 30px;
+/* Dark Mode Automatica */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #0a0a0a;
+        --primary-color: #f5f5f7;
     }
-    
     .project-link {
-        padding: 10px 16px;
-        font-size: 0.9rem;
+        border-color: #2c2c2e;
     }
 }
