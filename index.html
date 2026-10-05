@@ -1,25 +1,427 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ccoppi</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ccoppi - Hub Progetti</title>
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #151d30;
+      --bg-card-hover: #1c2742;
+      --bg-input: #1e293b;
+      --border: #334155;
+      --border-focus: #475569;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --green: #10b981;
+      --gold: #f59e0b;
+      --accent-crash: #e11d48;
+      --accent-mines: #10b981;
+      --accent-plinko: #ec4899;
+      --accent-race: #f59e0b;
+      --accent-dice: #8b5cf6;
+      --accent-tombola: #06b6d4;
+      --accent-briscola: #3b82f6;
+      --accent-qr: #14b8a6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: max(14px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(139, 92, 246, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(225, 29, 72, 0.07) 0%, transparent 40%);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Top Brand Header (Senza crediti) */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 18px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .logo span {
+      background: linear-gradient(135deg, #f59e0b, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .badge-count {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+    }
+
+    /* Section Title */
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Responsive Grid: 2 colonne su iPhone, 3 su Mac */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (min-width: 640px) {
+      .games-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+    }
+
+    /* Card Progetto */
+    .game-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .game-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent, #fff);
+      opacity: 0.85;
+    }
+
+    @media (hover: hover) {
+      .game-card:hover {
+        background: var(--bg-card-hover);
+        border-color: var(--border-focus);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5), 0 0 16px var(--glow, transparent);
+      }
+    }
+
+    .game-card:active {
+      transform: scale(0.97);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+
+    .card-icon {
+      font-size: 1.85rem;
+      line-height: 1;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    }
+
+    .card-tag {
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: var(--bg-input);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .card-info h2 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.2px;
+    }
+
+    .card-info p {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .card-btn {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #fff;
+      transition: all 0.15s;
+    }
+
+    .game-card:hover .card-btn {
+      background: var(--accent, #fff);
+      color: #0b0f19;
+      border-color: transparent;
+    }
+
+    .card-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Colori Accento delle Card */
+    .card-crash { --accent: var(--accent-crash); --glow: rgba(225, 29, 72, 0.25); }
+    .card-mines { --accent: var(--accent-mines); --glow: rgba(16, 185, 129, 0.25); }
+    .card-plinko { --accent: var(--accent-plinko); --glow: rgba(236, 72, 153, 0.25); }
+    .card-race { --accent: var(--accent-race); --glow: rgba(245, 158, 11, 0.25); }
+    .card-dice { --accent: var(--accent-dice); --glow: rgba(139, 92, 246, 0.25); }
+    .card-tombola { --accent: var(--accent-tombola); --glow: rgba(6, 182, 212, 0.25); }
+    .card-briscola { --accent: var(--accent-briscola); --glow: rgba(59, 130, 246, 0.25); }
+    .card-qr { --accent: var(--accent-qr); --glow: rgba(20, 184, 166, 0.25); }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 12px 0 6px;
+      font-size: 0.72rem;
+      color: #475569;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">ccoppi</h1>
-        
-        <nav class="projects">
-            <a href="https://ccoppi.github.io/tombola/" class="project-link">Tombola</a>
-            <a href="https://ccoppi.github.io/mines/" class="project-link">Mines Game</a>
-            <a href="https://ccoppi.github.io/crash/" class="project-link">Crash Game</a>
-            <a href="https://ccoppi.github.io/plinko/" class="project-link">Plinko Game</a>
-            <a href="https://ccoppi.github.io/corsa/" class="project-link">Corsa</a>
-            <a href="https://ccoppi.github.io/dadi/" class="project-link">Simulatore dadi</a>
-            <a href="https://ccoppi.github.io/briscola/" class="project-link">Punteggio briscola</a>
-            <a href="https://ccoppi.github.io/qrcode/" class="project-link">Generatore di QR Code</a>
-        </nav>
+
+  <div class="container">
+    <!-- Header pulito senza saldo crediti -->
+    <header>
+      <div class="logo">
+        ⚡ <span>ccoppi</span>
+      </div>
+      <div class="badge-count">
+        <span class="badge-dot"></span>
+        <span>8 Progetti</span>
+      </div>
+    </header>
+
+    <!-- Sezione 1: Fast Games & Arcade -->
+    <div class="section-title">🚀 Fast Games & Arcade</div>
+    <div class="games-grid">
+      <!-- Crash Game -->
+      <a href="https://ccoppi.github.io/crash/" class="game-card card-crash">
+        <div class="card-top">
+          <span class="card-icon">🚀</span>
+          <span class="card-tag">Multiplayer</span>
+        </div>
+        <div class="card-info">
+          <h2>Crash</h2>
+          <p>Moltiplicatore in salita esponenziale. Incassa prima dello schianto.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Mines Game -->
+      <a href="https://ccoppi.github.io/mines/" class="game-card card-mines">
+        <div class="card-top">
+          <span class="card-icon">💎</span>
+          <span class="card-tag">Griglia 5x5</span>
+        </div>
+        <div class="card-info">
+          <h2>Mines</h2>
+          <p>Trova i diamanti evitando le bombe nascoste sul campo.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Plinko Game -->
+      <a href="https://ccoppi.github.io/plinko/" class="game-card card-plinko">
+        <div class="card-top">
+          <span class="card-icon">🎯</span>
+          <span class="card-tag">Fisica 2D</span>
+        </div>
+        <div class="card-info">
+          <h2>Plinko</h2>
+          <p>Fai cadere le biglie tra i pioli e punta al moltiplicatore 15x.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Corsa -->
+      <a href="https://ccoppi.github.io/corsa/" class="game-card card-race">
+        <div class="card-top">
+          <span class="card-icon">🏇</span>
+          <span class="card-tag">Arcade Derby</span>
+        </div>
+        <div class="card-info">
+          <h2>Corsa</h2>
+          <p>Gara su 5 corsie a quota fissa con allungo e fotofinish.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Simulatore Dadi -->
+      <a href="https://ccoppi.github.io/dadi/" class="game-card card-dice">
+        <div class="card-top">
+          <span class="card-icon">🎲</span>
+          <span class="card-tag">3D CSS</span>
+        </div>
+        <div class="card-info">
+          <h2>Dadi 3D</h2>
+          <p>Simulatore di 1 o 2 dadi con rotazione 3D e statistiche.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
     </div>
+
+    <!-- Sezione 2: Giochi Tradizionali & Utilità -->
+    <div class="section-title">🃏 Tavolo & Utilità</div>
+    <div class="games-grid">
+      <!-- Tombola -->
+      <a href="https://ccoppi.github.io/tombola/" class="game-card card-tombola">
+        <div class="card-top">
+          <span class="card-icon">🎱</span>
+          <span class="card-tag">Tabellone</span>
+        </div>
+        <div class="card-info">
+          <h2>Tombola</h2>
+          <p>Estrazione e gestione dei 90 numeri per le feste in famiglia.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Punteggio Briscola -->
+      <a href="https://ccoppi.github.io/briscola/" class="game-card card-briscola">
+        <div class="card-top">
+          <span class="card-icon">🃏</span>
+          <span class="card-tag">Segnapunti</span>
+        </div>
+        <div class="card-info">
+          <h2>Briscola</h2>
+          <p>Calcolo e tracciamento rapido dei punti per le partite a carte.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Generatore QR Code -->
+      <a href="https://ccoppi.github.io/qrcode/" class="game-card card-qr">
+        <div class="card-top">
+          <span class="card-icon">📱</span>
+          <span class="card-tag">Utility</span>
+        </div>
+        <div class="card-info">
+          <h2>QR Code</h2>
+          <p>Generatore rapido di codici QR pronti da scansionare e scaricare.</p>
+        </div>
+        <div class="card-btn">
+          <span>Apri</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+
+    <footer>
+      ccoppi.github.io • Creato con HTML, CSS e JavaScript
+    </footer>
+  </div>
+
 </body>
 </html>
